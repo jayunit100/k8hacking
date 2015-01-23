@@ -1,21 +1,13 @@
-== Deploying spark and cassandra on kubernetes ==
+## Deploying spark and cassandra on kubernetes ==
 
 This repository contains everything for deploying spark on kubernetes.  
 
 Cassandra coming soon - if I keep this up to date.
-
-
-== Spark deployment ==
-
+## Spark deployment
 This README file will explain whats in the scripts.  I've found that sometimes is
-
 better than writing all the directions down, since code is often self describing, and 
-
 docs go stale so fast.
-
-
-=== setup and reproducing your own version of the docker containers ===
-
+## setup and reproducing your own version of the docker containers
 This step is optional if you want to build docker images from scratch, to learn how it works. 
 
 The dockerimages curated by me (jayunit100/spark...) work well and dont need modification. 
@@ -34,8 +26,7 @@ This action will create a locally stored docker image.  Now you will need to pus
 
 At that point, you can replace the "image" names  in the kubernetes yaml and json files with your own.
 
-== time to launch the containers  ==
-
+## time to launch the containers 
 Note that if you *really* want to run spark jobs, this won't work unless DNS is working.  If you want to run jobs for real, go to the bottom of this doc where we have a workaround to run in service-less mode.  This allows for static IP on the master.
 
 Okay ! now lets launch these guys in kubernetes.
@@ -44,7 +35,7 @@ First, take a look at the yaml and json files.  Each describes either a *pod* a 
 
 If you don't understand the difference between these, then read the guestbook example on https://github.com/GoogleCloudPlatform/kubernetes/tree/master/examples/guestbook . 
 
-To run this stuff, now, you will want to launch , in this order, masters and slaves.
+To run this stuff, now, you will want to launch , in this order, masters and slaves.---
 
 - launch the spark master pod
 - launch the spark master service 
@@ -53,7 +44,7 @@ To run this stuff, now, you will want to launch , in this order, masters and sla
 
 This is done for you in the kube-deploy.sh script.
 
-== finally... clean up! ==
+## finally... clean up!
 
 Once your done ( you should seelots of running spark slaves !), you can kill everything off like this.
 
@@ -71,7 +62,7 @@ Once your done ( you should seelots of running spark slaves !), you can kill eve
 
 ```docker run -e HOSTNAME=192.168.20.78 -e SPARK_LOCAL_IP=192.168.20.78 -e SPARK_LOCAL_DNS=192.168.20.78 -t -i jayunit100/spark7 /bin/bash -c "ip addr && cat /etc/hosts | grep -v 192 > /etc/hosts2 && cat /etc/hosts2 > /etc/hosts && env && /opt/spark-1.2.0-bin-hadoop2.4/sbin/start-master.sh -i 192.168.20.76 && tailf /opt/spark-1.2.0-bin-hadoop2.4/logs/*"```
 
-Explanation:
+*Explanation*
 
 1) Eliminate any possibility of spark trying to use a hostname (eliminate the HOSTNAME variable, kill /etc/hosts entries)  
 2) Set Environment vars for SPARK_LOCAL_IP and SPARK_LOCAL_DNS to be the exact IP of running container (this can be automated w/ cut in ip addr).
@@ -79,6 +70,7 @@ Explanation:
 
 After this, b/c The docker containers in k8 are all on a shared 192 subnet, they all see each other, and can join the master. To test the jobs, u just do a docker exec like this:  And reference the masters port...
 
-docker exec -t -i 832204f7da04 /bin/bash /opt/spark-1.2.0-bin-hadoop2.4/bin/spark-submit --class org.apache.spark.examples.SparkPi --master spark://192.168.20.78:7077 /opt/spark-1.2.0-bin-hadoop2.4/lib/spark-examples-1.2.0-hadoop2.4.0.jar 10  
+```docker exec -t -i 832204f7da04 /bin/bash /opt/spark-1.2.0-bin-hadoop2.4/bin/spark-submit --class org.apache.spark.examples.SparkPi --master spark://192.168.20.78:7077 /opt/spark-1.2.0-bin-hadoop2.4/lib/spark-examples-1.2.0-hadoop2.4.0.jar 10 ```
 
-The pod files for launching all this are on the repo https://github.com/jayunit100/k8hacking.
+## Thats it! 
+Contact jay@apache.org for questions.
