@@ -7,7 +7,7 @@ desiredState:
     id: spark
     containers:
       - name: spark
-        image: jayunit100/spark2
+        image: jayunit100/spark7
         command:
            - /bin/bash
            - /opt/run.sh

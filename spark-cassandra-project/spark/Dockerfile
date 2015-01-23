@@ -3,14 +3,15 @@ RUN yum clean all
 RUN yum install -y tar yum-utils wget
 RUN yum-config-manager --save --setopt=fedora.skip_if_unavailable=true     
 RUN yum update -y
-
 # Java
 RUN yum install -y java-1.7.0-openjdk-devel.x86_64
 
 # Spark  in /opt. default to hadoop 2.4 version.
 COPY spark-1.2.0-bin-hadoop2.4.tgz /opt/
+
 # ADD from HTTP doesn't unzip for us (https://github.com/docker/docker/issues/6353).  So untar here.
 RUN tar -xzf /opt/spark-1.2.0-bin-hadoop2.4.tgz -C /opt/
+
 RUN echo "SPARK_HOME=/opt/spark-1.2.0-bin-hadoop2.4" >> /etc/environment
 
 #RUN echo "172.17.0.2	scale1.docker" >> /etc/hosts
