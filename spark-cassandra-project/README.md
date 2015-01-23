@@ -1,4 +1,4 @@
-## Deploying spark and cassandra on kubernetes ==
+## Deploying spark and cassandra on kubernetes
 
 This repository contains everything for deploying spark on kubernetes.  
 
