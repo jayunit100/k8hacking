@@ -58,7 +58,9 @@ Once your done ( you should seelots of running spark slaves !), you can kill eve
 
 ```for line in $(kubectl get pods | grep 1 | cut -d' ' -f 1 | grep 1); do kubectl delete pod $line ; done;```
 
-== Hackaround for running w/o master service. ==
+## Hackaround for running w/o master service
+
+note: *ip* command is not necessary here, its just for debugging.
 
 ```docker run -e HOSTNAME=192.168.20.78 -e SPARK_LOCAL_IP=192.168.20.78 -e SPARK_LOCAL_DNS=192.168.20.78 -t -i jayunit100/spark7 /bin/bash -c "ip addr && cat /etc/hosts | grep -v 192 > /etc/hosts2 && cat /etc/hosts2 > /etc/hosts && env && /opt/spark-1.2.0-bin-hadoop2.4/sbin/start-master.sh -i 192.168.20.76 && tailf /opt/spark-1.2.0-bin-hadoop2.4/logs/*"```
 
