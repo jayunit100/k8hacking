@@ -1,0 +1,13 @@
+digraph {
+    node pnr [label="Application or Pod Failure"];
+
+    pnr -> "Pod waiting or restarting"  [label="Kubectl get pods shows WAITING pods  "] ;
+
+    "Pod waiting or restarting" -> "Possible lack of minions see docker/kubelet logs " [label="Scheduled, but Pod keeps \nrestarting, or never starts."];
+    "Pod waiting or restarting" -> "container runtime error;\n Make sure run cmd starts properly\n ; check journalctl docker on scheduled nodes" [label="Container ID not found after startup."]; 
+
+    pnr  -> "No minions available or json/yaml file error" [label="     Not scheduled."];
+
+    pnr -> "kubernetes networking model \n breaks app."  [label="Running, but services dont communicate normally"] ;
+ 
+}
