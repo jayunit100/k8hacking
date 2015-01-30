@@ -1,22 +1,24 @@
 #  Master pod definition.        # 
-id: spark-master                 # This id will be referenced in the 
-kind: Pod                        # spark-service definition.  
-apiVersion: v1beta1              # Make sure you use the right apiVersion.  This determines how
-desiredState:                    # API calls are made to the kubernetes services.
-  manifest:                      # The manifest defines all containers running for this "service"
+id: spark-master                 # This ID will be referenced in the service defs.  
+                                 # Those services, when launched, make this pods state highly available.
+                                 #
+kind: Pod                        # KIND: We are defining a POD in this file.
+apiVersion: v1beta1              # DESIREDSTATE: The containers and there run commands, ports, and so on.
+desiredState:                    # From here on, we define what containers are actually part of this pod.
+  manifest:                      # 
     version: v1beta1             #
-    id: spark                    # In this case, we have one container: Spark. 
-    containers:                  #
+    id: spark                    # 
+    containers:                  # From here on out, you define the running containers...
       - name: spark              #  
-        image: jayunit100/spark7 # This is the docker image.  in this case its at dockerhub (default)
-        command:                 #
-           - /bin/bash           # NOTE: When running a command in kubernetes, you need to provide 
+      image: jayunit100/spark7   # IMAGE: The docker image to pull.  
+      command:                   # COMMAND: Same as docker CMD.
+           - /bin/bash           # COMMAND ARGUMENTS: When running a command in kubernetes, you need to provide 
            - /opt/run.sh         # separated arguments in a YAML list.  Similarly you separate params in Json.
            - master              #
-        cpu: 1000                # This is a relative value.
+      cpu: 1000                  # CPU: This is a relative value.
         ports:                   #
           - name: spark-master   # 
-        containerPort: 7077      # The containerPort is equivalent to docker's -p flag, it exposes
+        containerPort: 7077      # CONTAINERPORT: is equivalent to docker's -p flag, it exposes
 labels:                          # a port externally.
-  name: spark-master             #
-
+name: spark-master               # LABEL NAME: This label must match the selector which is defined in the 
+                                 # corresponding service file.

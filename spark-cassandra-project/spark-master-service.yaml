@@ -1,0 +1,12 @@
+id: spark-master        # This id is coincidentally named the same as the Pod
+kind: Service           # which this service routes requests to, 
+                        # but thats not a requirement.
+                        #
+port: 7077              # port  : The port that we connect to the service on.
+containerPort: 7077     # containerPort : The port that traffic is sent to on the pods.
+                        #
+selector:               # selector: The pod that service traffic is sent to.
+    name:spark-master   # Thus, we will want to start this service after the pod is running.
+                        #
+labels:                 # 
+    name:spark-master   # This label has to match a service 
