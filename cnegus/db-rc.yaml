@@ -1,0 +1,23 @@
+id: "db-controller"
+    kind: "ReplicationController"
+    apiVersion: "v1beta1"
+    desiredState:
+      replicas: 1
+      replicaSelector:
+        selectorname: "db"
+      podTemplate:
+        desiredState:
+          manifest:
+            version: "v1beta1"
+            id: "db-controller"
+            containers:
+              - name: "db"
+                image: "dbforweb"
+                ports:
+                  - containerPort: 3306
+                    hostPort: 3306
+        labels:
+          name: "db"
+          selectorname: "db"
+      labels:
+        name: "db"
