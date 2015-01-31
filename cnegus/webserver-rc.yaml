@@ -1,24 +1,29 @@
-id: "webserver-controller"
-    kind: "ReplicationController"
-    apiVersion: "v1beta1"
+id: database
+kind: ReplicationController
+apiVersion: v1beta1
+desiredState:
+  replicas: 1
+  replicaSelector:
+    name: data1
+  # This is identical to the pod config above
+  podTemplate:
     desiredState:
-      replicas: 1
-      replicaSelector:
-        selectorname: "webserver"
-      podTemplate:
-        desiredState:
-          manifest:
-            version: "v1beta1"
-            id: "webserver-controller"
-            containers:
-              - name: "apache-frontend"
-                image: "rhel7:webserver"
-                ports:
-                  - containerPort: 80
-                    hostPort: 80
-        labels:
-          name: "webserver"
-          selectorname: "webserver"
-          uses: "db"
-      labels:
-        name: "webserver"
+      manifest:
+        version: v1beta1
+        id: data1
+        containers:
+          - name: data1
+            image: dbforweb
+            cpu: 1000
+            ports:
+              - name: cql
+                containerPort: 9042
+              - name: thrift
+                containerPort: 9160
+            env:
+              - key: MAX_HEAP_SIZE
+                value: 512M
+              - key: HEAP_NEWSIZE
+                value: 100M
+    labels:
+      name: data1

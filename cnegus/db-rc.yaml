@@ -1,23 +1,29 @@
-id: "db-controller"
-    kind: "ReplicationController"
-    apiVersion: "v1beta1"
+id: dbc
+kind: ReplicationController
+apiVersion: v1beta1
+desiredState:
+  replicas: 1
+  replicaSelector:
+    name: dbc
+  # This is identical to the pod config above
+  podTemplate:
     desiredState:
-      replicas: 1
-      replicaSelector:
-        selectorname: "db"
-      podTemplate:
-        desiredState:
-          manifest:
-            version: "v1beta1"
-            id: "db-controller"
-            containers:
-              - name: "db"
-                image: "dbforweb"
-                ports:
-                  - containerPort: 3306
-                    hostPort: 3306
-        labels:
-          name: "db"
-          selectorname: "db"
-      labels:
-        name: "db"
+      manifest:
+        version: v1beta1
+        id: dbc
+        containers:
+          - name: dbc
+            image: dbforweb
+            cpu: 1000
+            ports:
+              - name: cql
+                containerPort: 9042
+              - name: thrift
+                containerPort: 9160
+            env:
+              - key: MAX_HEAP_SIZE
+                value: 512M
+              - key: HEAP_NEWSIZE
+                value: 100M
+    labels:
+      name: dbc
