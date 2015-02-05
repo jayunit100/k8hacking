@@ -1,0 +1,11 @@
+. **Start the database server container**: To start the container image, run the following command:
+    <pre><tt># <b>docker run -d -p 3306:3306 --name=mydbforweb dbforweb</b>
+    </tt></pre>
+1. **Test the database server container**: To check that the database container is operational, run the nc command below:
+    <pre><tt># <b>nc -v 172.17.42.1 3306</b>
+    Ncat: Version 6.40 ( http://nmap.org/ncat )
+    Ncat: Connected to 172.17.42.1:3306.
+    R
+    5.5.40-MariaDB?acL3YF31?X?FWbiiTIO2Kd6mysql_native_password <b>Ctrl-C</b>
+    </tt></pre>
+

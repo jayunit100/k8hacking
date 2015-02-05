@@ -1,0 +1,17 @@
+    <pre><tt># <b>docker run -d -p 80:80 --name=mywebwithdb webwithdb</b>
+    </tt></pre>
+1. **Test the Web server container**: To check that the Web server is operational, run the first curl command below. If you have the backend database container running, try the second command (or type the URL into a Web browser on the local system):
+    <pre><tt># <b>curl http://localhost/index.html</b>
+    The Web Server is Running
+    # <b>curl http://localhost/cgi-bin/action</b>
+    &lt;html&gt;
+    &lt;head&gt;
+    &lt;title&gt;My Application&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+    &lt;h2&gt;RedHat rocks&lt;/h2&gt;
+    &lt;h2&gt;Success&lt;/h2&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+    &lt;/tt&gt;&lt;/pre&gt;
+    </tt></pre>
