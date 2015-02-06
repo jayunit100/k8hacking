@@ -7,7 +7,8 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
  
   config.vm.synced_folder ".", "/vagrant", disabled: true
-  config.vm.synced_folder "./", "/tmp/shared"
+  #shared folders not working w/ atomic currently.
+  #config.vm.synced_folder "./", "/tmp/shared"
 
   # All Vagrant configuration is done here. The most common configuration
   # options are documented and commented below. For a complete reference,
@@ -19,6 +20,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   
   config.vm.provider "virtualbox" do |vb|
     vb.customize ["modifyvm", :id, "--memory", "5000"]
+    vb.provision :shell, inline: "subscription-manager register --auto-attach --username=rhn-support-XYZ --password=ABC"  
+    vb.provision :shell, inline: "for SERVICES in etcd kube-apiserver kube-controller-manager kube-scheduler ; do  sudo systemctl restart $SERVICES; sudo systemctl enable $SERVICES; done"
+    vb.provision :shell, inline: "for SERVICES in docker kube-proxy.service kubelet.service; do systemctl restart $SERVICES; systemctl enable $SERVICES; systemctl status $SERVICES; done"
+    vb.provision :shell, inline: "ss -tupln | grep -E \"(kube)|(etcd)\""
+    vb.provision :shell, inline: "curl -s -L http://localhost:4001/version"
+
   end
   #
 end
