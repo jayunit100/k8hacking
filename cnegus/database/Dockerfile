@@ -6,9 +6,12 @@ FROM rhel7:latest
 USER root
 MAINTAINER Chris Negus
 # Update image
-RUN yum update -y
+# RUN yum update -y
 # Add Mariahdb software
-RUN yum -y install mariadb-server -y
+RUN yum repolist all
+RUN yum install -y yum-utils
+RUN yum-config-manager --enable epel
+RUN yum install -y mariadb-server -y
 # Set up Mariahdb database
 ADD gss_db.sql /tmp/gss_db.sql
 RUN /usr/libexec/mariadb-prepare-db-dir
