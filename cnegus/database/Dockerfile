@@ -6,19 +6,15 @@ FROM rhel7:latest
 USER root
 MAINTAINER Chris Negus
 # Update image
-# RUN yum update -y
+RUN yum update -y
 # Add Mariahdb software
-RUN yum repolist all
-RUN yum install -y yum-utils
-RUN yum-config-manager --enable epel
-RUN yum install -y mariadb-server -y
+RUN yum -y install mariadb-server -y
 # Set up Mariahdb database
 ADD gss_db.sql /tmp/gss_db.sql
+ADD install_db.sh /tmp/install_db.sh
 RUN /usr/libexec/mariadb-prepare-db-dir
-RUN /usr/bin/mysqld_safe --basedir=/usr && sleep 10s && \
-/usr/bin/mysqladmin -u root password 'redhat' && \
-mysql --user=root --password=redhat < /tmp/gss_db.sql && \
-mysqladmin shutdown --password=redhat
+RUN /tmp/install_db.sh
+#RUN /usr/bin/mysqld_safe --basedir=/usr && echo BB && sleep 10s && echo "admin" && /usr/bin/mysqladmin -u root password 'redhat' && mysql --user=root --password=redhat < /tmp/gss_db.sql && mysqladmin shutdown --password=redhat
 # Expose Mysql port 3306
 EXPOSE 3306
 CMD ["--basedir=/usr"]
