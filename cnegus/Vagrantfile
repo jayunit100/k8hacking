@@ -5,6 +5,10 @@
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+ 
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+  config.vm.synced_folder "./", "/tmp/shared"
+
   # All Vagrant configuration is done here. The most common configuration
   # options are documented and commented below. For a complete reference,
   # please see the online documentation at vagrantup.com.
@@ -13,13 +17,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "atomic" 
   config.vm.box_url = "http://download.eng.bos.redhat.com/rel-eng/Atomic/7/trees/GA.brew/images//20150129.0/cloud/rhel-atomic-host-cloud-vagrant-virtualbox.box"
   
-  config.vm.synced_folder "./", "/tmp/shared"
   config.vm.provider "virtualbox" do |vb|
-  #   # Don't boot with headless mode
-  #   vb.gui = true
-  #
-  # Use VBoxManage to customize the VM. For example to change memory:
-      vb.customize ["modifyvm", :id, "--memory", "5000"]
-      end
+    vb.customize ["modifyvm", :id, "--memory", "5000"]
+  end
   #
 end
