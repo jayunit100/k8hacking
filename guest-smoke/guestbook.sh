@@ -147,10 +147,16 @@ kubectl create -f fe-s.json
 # wait 60 seconds, this should be sufficient if containers are downloaded on the system.
 sleep 60 
 
+### Loop through and keep trying.
+for ((i=1;i<=100;i++));
+do
+    echo "Trying curl ... $i . expect a few failures while pulling images... " 
+    curl "localhost:8000/index.php?cmd=set&key=messages&value=jayunit100"
+    echo $i
+    sleep 5
+done
 
-curl "localhost:8000/index.php?cmd=set&key=messages&value=jayunit100" 
-
-
+### Kill the test.
 kubectl delete -f rm.json 
 kubectl delete -f rm-s.json 
 kubectl delete -f rs-rc.json 
