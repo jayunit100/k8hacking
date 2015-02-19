@@ -146,36 +146,24 @@ kubectl create -f fe-s.json
 # wait 60 seconds, this should be sufficient if containers are downloaded on the system.
 echo "Sleeping for 60 seconds, to give cluster time to start the app..."
 sleep 60 
-
+i=0
 ### Loop through and keep trying.
-for ((i=1;i<=100;i++));
+for i in `seq 1 100`;
 do
     echo "Trying curl ... $i . expect a few failures while pulling images... " 
     curl "localhost:8000/index.php?cmd=set&key=messages&value=jayunit100" > result
     cat result
     cat result | grep -q "Updated"
     if [ $? -eq 0 ]; then
-        echo "TEST PASSED"
+        echo "TEST PASSED after $i tries !"
         i=1000
+        exit 0
     fi 
     echo "RESULT $i"
     sleep 5
 done
-
 cat result
+echo " After several [ $i ] tries, TEST FAILED !!!!!!!"
+exit 1
 
-if [ $i -eq 1000 ]; then
-    echo "Final Test result : PASSED "
-else
-    echo "Final Test result:  FAILED "
-    exit 1
-fi 
 
-### Kill the test.
-kubectl delete -f rm.json 
-kubectl delete -f rm-s.json 
-kubectl delete -f rs-rc.json 
-kubectl delete -f slave-rc.json 
-kubectl delete -f rs-s.json
-kubectl delete -f fe-rc.json 
-kubectl delete -f fe-s.json 
