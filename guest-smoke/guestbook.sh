@@ -1,5 +1,4 @@
-o "WRITING KUBE FILES , will overwrite the jsons, then testing pods. is kube clean ready to go?"
-read x
+echo "WRITING KUBE FILES , will overwrite the jsons, then testing pods. is kube clean ready to go?"
 
 cat << EOF > fe-rc.json
 {
@@ -164,10 +163,10 @@ done
 
 cat result
 
-if [ $? -eq 1000 ]; then
-    echo "TEST PASSED."
+if [ $i -eq 1000 ]; then
+    echo "Final Test result : PASSED "
 else
-    echo "TEST FAILED"
+    echo "Final Test result:  FAILED "
     exit 1
 fi 
 
