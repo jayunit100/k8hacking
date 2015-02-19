@@ -20,12 +20,18 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   
   config.vm.provider "virtualbox" do |vb|
     vb.customize ["modifyvm", :id, "--memory", "5000"]
-    vb.provision :shell, inline: "subscription-manager register --auto-attach --username=rhn-support-XYZ --password=ABC"  
-    vb.provision :shell, inline: "for SERVICES in etcd kube-apiserver kube-controller-manager kube-scheduler ; do  sudo systemctl restart $SERVICES; sudo systemctl enable $SERVICES; done"
-    vb.provision :shell, inline: "for SERVICES in docker kube-proxy.service kubelet.service; do systemctl restart $SERVICES; systemctl enable $SERVICES; systemctl status $SERVICES; done"
-    vb.provision :shell, inline: "ss -tupln | grep -E \"(kube)|(etcd)\""
-    vb.provision :shell, inline: "curl -s -L http://localhost:4001/version"
-
   end
-  #
+
+  #Vagrant.configure("2") do |config|
+
+    # config.vm.provision :shell, inline: "subscription-manager register --auto-attach --username=rhn-support-j --password=F"  
+    config.vm.provision :shell, inline: "for SERVICES in etcd kube-apiserver kube-controller-manager kube-scheduler ; do  sudo systemctl restart $SERVICES; sudo systemctl enable $SERVICES; done"
+    config.vm.provision :shell, inline: "for SERVICES in docker kube-proxy.service kubelet.service; do systemctl restart $SERVICES; systemctl enable $SERVICES; systemctl status $SERVICES; done"
+    config.vm.provision :shell, inline: "ss -tupln | grep -E \"(kube)|(etcd)\""
+    config.vm.provision :shell, inline: "curl -s -L http://localhost:4001/version"
+    config.vm.provision :shell, inline: "curl https://raw.githubusercontent.com/jayunit100/k8hacking/master/guest-smoke/guestbook.sh > /opt/guestbook.sh"
+    config.vm.provision :shell, inline: "cd /tmp/ && chmod 777 /opt/guestbook.sh && /opt/guestbook.sh"
+    # end
+
+  
 end

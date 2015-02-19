@@ -152,7 +152,7 @@ for ((i=1;i<=100;i++));
 do
     echo "Trying curl ... $i . expect a few failures while pulling images... " 
     curl "localhost:8000/index.php?cmd=set&key=messages&value=jayunit100"
-    echo $i
+    echo "RESULT $i"
     sleep 5
 done
 
