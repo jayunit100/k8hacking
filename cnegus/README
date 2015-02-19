@@ -1,0 +1,11 @@
+== vagrant setup ==
+
+Just run vagrant up.  Even without shared folders, guestbook app test should run, 
+and after 100 tries, it will either have passed, or exist w/ failure code (non zero).
+
+It prints each try to connect to guestbook, so, it is a nice way to interactively test
+kube setups
+.
+http://download.eng.bos.redhat.com/rel-eng/Atomic/7/trees/GA.brew/images/20150129.0/cloud/
+
+

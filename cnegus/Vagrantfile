@@ -6,6 +6,8 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
  
+  RHN="rhn-support-jvyas"
+  PWD="F<enter password here>"
   config.vm.synced_folder ".", "/vagrant", disabled: true
   #shared folders not working w/ atomic currently.
   #config.vm.synced_folder "./", "/tmp/shared"
@@ -22,9 +24,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.customize ["modifyvm", :id, "--memory", "5000"]
   end
 
+  ### Forward Guestbook port to localhost. 
+  config.vm.network "forwarded_port", guest: 8000, host: 8123
+  
   #Vagrant.configure("2") do |config|
-
-    # config.vm.provision :shell, inline: "subscription-manager register --auto-attach --username=rhn-support-j --password=F"  
+   
+    config.vm.provision :shell, inline: "subscription-manager register --auto-attach --username=#{RHN} --password=#{PWD}"  
+    #### SETENFORCE 0 :  Necessary for REDIS to write properly to disk ? 
+    config.vm.provision :shell, inline: "setenforce 0" 
+  
     config.vm.provision :shell, inline: "for SERVICES in etcd kube-apiserver kube-controller-manager kube-scheduler ; do  sudo systemctl restart $SERVICES; sudo systemctl enable $SERVICES; done"
     config.vm.provision :shell, inline: "for SERVICES in docker kube-proxy.service kubelet.service; do systemctl restart $SERVICES; systemctl enable $SERVICES; systemctl status $SERVICES; done"
     config.vm.provision :shell, inline: "ss -tupln | grep -E \"(kube)|(etcd)\""
