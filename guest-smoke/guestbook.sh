@@ -145,10 +145,10 @@ kubectl create -f fe-s.json
 
 # wait 60 seconds, this should be sufficient if containers are downloaded on the system.
 echo "Sleeping for 60 seconds, to give cluster time to start the app..."
-sleep 60 
+sleep 10 
 i=0
 ### Loop through and keep trying.
-for i in `seq 1 100`;
+for i in `seq 1 150`;
 do
     echo "Trying curl ... $i . expect a few failures while pulling images... " 
     curl "localhost:8000/index.php?cmd=set&key=messages&value=jayunit100" > result
