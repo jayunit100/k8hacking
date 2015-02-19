@@ -144,6 +144,7 @@ kubectl create -f fe-rc.json
 kubectl create -f fe-s.json 
 
 # wait 60 seconds, this should be sufficient if containers are downloaded on the system.
+echo "Sleeping for 60 seconds, to give cluster time to start the app..."
 sleep 60 
 
 ### Loop through and keep trying.
