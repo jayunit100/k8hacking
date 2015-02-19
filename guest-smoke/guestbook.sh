@@ -151,10 +151,25 @@ sleep 60
 for ((i=1;i<=100;i++));
 do
     echo "Trying curl ... $i . expect a few failures while pulling images... " 
-    curl "localhost:8000/index.php?cmd=set&key=messages&value=jayunit100"
+    curl "localhost:8000/index.php?cmd=set&key=messages&value=jayunit100" > result
+    cat result
+    cat result | grep -q "Updated"
+    if [ $? -eq 0 ]; then
+        echo "TEST PASSED"
+        i=1000
+    fi 
     echo "RESULT $i"
     sleep 5
 done
+
+cat result
+
+if [ $? -eq 1000 ]; then
+    echo "TEST PASSED."
+else
+    echo "TEST FAILED"
+    exit 1
+fi 
 
 ### Kill the test.
 kubectl delete -f rm.json 
