@@ -15,7 +15,7 @@ cat << EOF > fe-rc.json
            "id": "frontend-controller",
            "containers": [{
              "name": "php-redis",
-             "image": "kubernetes/example-guestbook-php-redis",
+             "image": "jayunit100/guestbook-php",
              "cpu": 100,
              "memory": 50000000,
              "ports": [{"containerPort": 80, "hostPort": 8000}]
@@ -58,7 +58,7 @@ cat << EOF > rm.json
       "id": "redis-master",
       "containers": [{
         "name": "master",
-        "image": "dockerfile/redis",
+        "image": "jayunit100/guestbook-redis-master",
         "cpu": 100,
         "ports": [{
           "containerPort": 6379,
@@ -120,7 +120,7 @@ cat << EOF > slave-rc.json
            "id": "redis-slave-controller",
            "containers": [{
              "name": "slave",
-             "image": "brendanburns/redis-slave",
+             "image": "jayunit100/guestbook-redis-slave",
              "cpu": 200,
              "ports": [{"containerPort": 6379, "hostPort": 6380}]
            }]
