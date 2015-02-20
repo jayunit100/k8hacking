@@ -6,6 +6,10 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
  
+
+ puts "note this Atomic OS  Vagrantfile is old .  look at the one in guestbook/  for now where current maintainance is going on."
+
+
   RHN="rhn-support-jvyas"
   PWD="F<enter password here>"
   config.vm.synced_folder ".", "/vagrant", disabled: true

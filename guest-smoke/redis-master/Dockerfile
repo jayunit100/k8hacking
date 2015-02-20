@@ -9,3 +9,9 @@
 # Just a stub. 
 
 FROM jayunit100/redis
+
+ADD etc_redis_redis.conf /etc/redis/redis.conf
+
+CMD ["redis-server", "/etc/redis/redis.conf"]
+# Expose ports.
+EXPOSE 6379

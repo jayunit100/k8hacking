@@ -13,6 +13,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+i
+echo "Note, if you get errors below indicate kubernetes env injection could be faliing..."
+echo "env vars ="
+env
+echo "CHECKING ENVS BEFORE STARTUP........"
+if [ ! "$REDIS_MASTER_SERVICE_HOST" ]; then
+    echo "Need to set REDIS_MASTER_SERVICE_HOST" && exit 1;
+fi
+if [ ! "$REDIS_MASTER_PORT" ]; then
+    echo "Need to set REDIS_MASTER_PORT" && exit 1;
+fi
+
+echo "ENV Vars look good, starting !"
 
 redis-server --slaveof ${REDIS_MASTER_SERVICE_HOST:-$SERVICE_HOST} $REDIS_MASTER_SERVICE_PORT
-

@@ -7,7 +7,7 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
  
   RHN="rhn-support-jvyas"
-  PWD="F<enter password here>"
+  PWD="asdfasdfasdfFsdfasdfrasdfasdafasdfatsdfaysdfoasdfbasdafasdvfacsdfuasdfeasdf1asdfs-df"
   config.vm.synced_folder ".", "/vagrant", disabled: true
   #shared folders not working w/ atomic currently.
   #config.vm.synced_folder "./", "/tmp/shared"
