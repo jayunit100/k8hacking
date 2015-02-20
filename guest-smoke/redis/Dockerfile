@@ -30,8 +30,10 @@ VOLUME ["/data"]
 # Define working directory.
 WORKDIR /data
 
-# Define default command.
-CMD ["redis-server", "/etc/redis/redis.conf"]
+ADD etc_redis_redis.conf /etc/redis/redis.conf
+
+# Print redis configs and start.
+CMD "grep -v /etc/redis/redis.conf \# && redis-server /etc/redis/redis.conf"
 
 # Expose ports.
 EXPOSE 6379
