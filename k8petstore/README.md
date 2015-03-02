@@ -1,12 +1,14 @@
 ## Welcome to PetStoreBook !
 
 This application will run a web server which returns REDIS records for a petstore application.
-
 It is meant to simulate and test high load on kubernetes or any other docker based system.
 
 ## Dependencies
 
-This project depends on no other images or services, however, it is nicely complimented by 
+This project depends on:
+
+- docker: jayunit100/bigpetstore-load-generator. 
+- docker: dockerfile/redis, which is a simple curated redis image.
 
 jayunit100/BigPetStoreLoadGenerator (github) which is published to docker as jayunit100/bigpetstore-load-generator.
 
