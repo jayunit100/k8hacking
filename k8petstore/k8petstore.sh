@@ -1,6 +1,5 @@
 echo "WRITING KUBE FILES , will overwrite the jsons, then testing pods. is kube clean ready to go?"
 
-
 cat << EOF > bps-load-gen-rc.json
 {
   "id": "bps-load-gen-controller",
@@ -18,7 +17,7 @@ cat << EOF > bps-load-gen-rc.json
              "name": "bps",
              "image": "jayunit100/bigpetstore-load-generator",
              "cpu": 100,
-             "command": ["sh","-c","/opt/PetStoreLoadGenerator-1.0/bin/PetStoreLoadGenerator http://\$FRONTEND_SERVICE_HOST:3000/restapi/rpush/ 4 4 1000 123"] 
+             "command": ["sh","-c","/opt/PetStoreLoadGenerator-1.0/bin/PetStoreLoadGenerator http://\$FRONTEND_SERVICE_HOST:3000/rpush/guestbook/ 4 4 1000 123"]
          }]
          }
        },
@@ -29,7 +28,6 @@ cat << EOF > bps-load-gen-rc.json
       }},
   "labels": {"name": "bps-load-gen-controller"}
 }
-EOF
 
 cat << EOF > fe-rc.json
 {
