@@ -54,10 +54,10 @@ cat << EOF > bps-load-gen-rc.json
          }
        },
        "labels": {
-         "name": "bps-label"
+         "name": "bps"
        }
       }},
-  "labels": {"name": "bps-label"}
+  "labels": {"name": "bps-load-gen-controller"}
 }
 EOF
 
@@ -94,7 +94,7 @@ cat << EOF > fe-rc.json
 }
 EOF
 
-at << EOF > fe-s.json
+cat << EOF > fe-s.json
 {
   "id": "frontend",
   "kind": "Service",
@@ -206,7 +206,7 @@ kubectl create -f rs-s.json
 kubectl create -f fe-rc.json 
 kubectl create -f fe-s.json 
 echo "Sleeping 30 seconds to give others a head start before starting the load generator"
-sleep 30
+# sleep 30
 kubectl create -f bps-load-gen-rc.json
 
 
