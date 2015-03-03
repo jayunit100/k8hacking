@@ -4,7 +4,7 @@ cat << EOF > fe-rc.json
 {
   "id": "frontend-controller",
   "kind": "ReplicationController",
-  "apiVersion": "v1beta3",
+  "apiVersion": "v1beta1",
   "desiredState": {
     "replicas": 3,
     "replicaSelector": {"name": "frontend"},
@@ -35,7 +35,7 @@ cat << EOF > fe-s.json
 {
   "id": "frontend",
   "kind": "Service",
-  "apiVersion": "v1beta3",
+  "apiVersion": "v1beta1",
   "port": 3000,
   "containerPort": 3000,
   "selector": {
