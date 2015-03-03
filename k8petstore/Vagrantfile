@@ -7,7 +7,7 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
  
   RHN="rhn-support-jvyas"
-  PWD="asdfasdfasdfFsdfasdfrasdfasdafasdfatsdfaysdfoasdfbasdafasdvfacsdfuasdfeasdf1asdfs-df"
+  PWD="Fratyobavcue1-"
   config.vm.synced_folder ".", "/vagrant", disabled: true
   #shared folders not working w/ atomic currently.
   #config.vm.synced_folder "./", "/tmp/shared"
@@ -38,7 +38,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provision :shell, inline: "ss -tupln | grep -E \"(kube)|(etcd)\""
     config.vm.provision :shell, inline: "curl -s -L http://localhost:4001/version"
     config.vm.provision :shell, inline: "curl https://raw.githubusercontent.com/jayunit100/k8hacking/master/guest-smoke/guestbook.sh > /opt/guestbook.sh"
-    config.vm.provision :shell, inline: "cd /tmp/ && chmod 777 /opt/guestbook.sh && /opt/guestbook.sh"
+    config.vm.provision :shell, inline: "cd /opt/ && chmod 777 /opt/guestbook.sh && /opt/guestbook.sh"
     # end
 
   
