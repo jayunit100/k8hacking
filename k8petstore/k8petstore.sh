@@ -1,35 +1,5 @@
 echo "WRITING KUBE FILES , will overwrite the jsons, then testing pods. is kube clean ready to go?"
 
-cat << EOF > fe-rc.json
-{
-  "id": "frontend-controller",
-  "kind": "ReplicationController",
-  "apiVersion": "v1beta1",
-  "desiredState": {
-    "replicas": 1,
-    "replicaSelector": {"name": "frontend"},
-    "podTemplate": {
-      "desiredState": {
-         "manifest": {
-           "version": "v1beta1",
-           "id": "frontend-controller",
-           "containers": [{
-             "name": "php-redis",
-             "image": "jayunit100/k8petstore",
-             "cpu": 100,
-             "memory": 50000000,
-             "ports": [{"containerPort": 3000, "hostPort": 3000}]
-           }]
-         }
-       },
-       "labels": {
-         "name": "frontend",
-         "uses": "redisslave,redis-master"
-       }
-      }},
-  "labels": {"name": "frontend"}
-}
-EOF
 
 cat << EOF > bps-load-gen-rc.json
 {
@@ -45,23 +15,21 @@ cat << EOF > bps-load-gen-rc.json
            "version": "v1beta1",
            "id": "bps-load-gen-controller",
            "containers": [{
-             "name": "php-redis",
+             "name": "bps",
              "image": "jayunit100/bigpetstore-load-generator",
              "cpu": 100,
-             "memory": 50000000,
-             "command": ["sh","-c","/opt/PetStoreLoadGenerator-1.0/bin/PetStoreLoadGenerator htttp://localhost:3000/restapi/rpush/ 4 4 1000 123"] 
+             "command": ["sh","-c","/opt/PetStoreLoadGenerator-1.0/bin/PetStoreLoadGenerator http://\$FRONTEND_SERVICE_HOST:3000/restapi/rpush/ 4 4 1000 123"] 
          }]
          }
        },
        "labels": {
-         "name": "bps"
-       }
+         "name": "bps",
+         "uses": "frontend"
+        }
       }},
   "labels": {"name": "bps-load-gen-controller"}
 }
 EOF
-
-
 
 cat << EOF > fe-rc.json
 {
@@ -77,10 +45,9 @@ cat << EOF > fe-rc.json
            "version": "v1beta1",
            "id": "frontend-controller",
            "containers": [{
-             "name": "php-redis",
+             "name": "fe-k8petstore",
              "image": "jayunit100/k8petstore",
              "cpu": 100,
-             "memory": 50000000,
              "ports": [{"containerPort": 3000, "hostPort": 3000}]
            }]
          }
@@ -174,7 +141,7 @@ cat << EOF > slave-rc.json
   "kind": "ReplicationController",
   "apiVersion": "v1beta1",
   "desiredState": {
-    "replicas": 2,
+    "replicas": 0,
     "replicaSelector": {"name": "redisslave"},
     "podTemplate": {
       "desiredState": {
@@ -198,13 +165,14 @@ cat << EOF > slave-rc.json
   "labels": {"name": "redisslave"}
 }
 EOF
-
 kubectl create -f rm.json 
 kubectl create -f rm-s.json 
 kubectl create -f slave-rc.json 
 kubectl create -f rs-s.json
 kubectl create -f fe-rc.json 
 kubectl create -f fe-s.json 
+kubectl create -f bps-load-gen-rc.json
+
 echo "Sleeping 30 seconds to give others a head start before starting the load generator"
 # sleep 30
 kubectl create -f bps-load-gen-rc.json
