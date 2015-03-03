@@ -14,10 +14,9 @@ cat << EOF > fe-rc.json
            "version": "v1beta1",
            "id": "frontend-controller",
            "containers": [{
-             "name": "php-redis",
+             "name": "frontend-go-restapi",
              "image": "jayunit100/k8petstore",
              "cpu": 100,
-             "memory": 50000000,
              "ports": [{"containerPort": 3000, "hostPort": 3000}]
            }]
          }
