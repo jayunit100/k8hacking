@@ -58,6 +58,7 @@ cat << EOF > bps-load-gen-rc.json
       }},
   "labels": {"name": "bps-load-gen-controller"}
 }
+EOF
 
 cat << EOF > fe-s.json
 {
@@ -193,7 +194,7 @@ do
         i=1000
         exit 0
     fi 
-    echo "RESULT $i"
+    echo "the above RESULT didn't contain target string for trial $i"
     sleep 5
 done
 cat result
