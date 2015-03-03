@@ -4,10 +4,17 @@
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 
+puts "MAKE SURE YOU HAVE A FILE rhnpassword which has your rhn password in it on the first line!"
+def rhnPassword()
+    newFile = File.open("rhnpassword")
+    newFile.read
+end
+
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
  
-  RHN="rhn-support-jvyas"
-  PWD="Fratyobavcue1-"
+  RHN = "rhn-support-jvyas"
+  PWD = rhnPassword()
+  puts PWD
   config.vm.synced_folder ".", "/vagrant", disabled: true
   #shared folders not working w/ atomic currently.
   #config.vm.synced_folder "./", "/tmp/shared"
@@ -21,12 +28,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box_url = "http://download.eng.bos.redhat.com/rel-eng/Atomic/7/trees/GA.brew/images//20150129.0/cloud/rhel-atomic-host-cloud-vagrant-virtualbox.box"
   
   config.vm.provider "virtualbox" do |vb|
-    vb.customize ["modifyvm", :id, "--memory", "5000"]
+    vb.customize ["modifyvm", :id, "--memory", "6200"]
   end
 
   ### Forward Guestbook port to localhost. 
-  config.vm.network "forwarded_port", guest: 8000, host: 8123
-  
+  config.vm.network "forwarded_port", guest: 3000, host: 3000
+
   #Vagrant.configure("2") do |config|
    
     config.vm.provision :shell, inline: "subscription-manager register --auto-attach --username=#{RHN} --password=#{PWD}"  
@@ -37,9 +44,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provision :shell, inline: "for SERVICES in docker kube-proxy.service kubelet.service; do systemctl restart $SERVICES; systemctl enable $SERVICES; systemctl status $SERVICES; done"
     config.vm.provision :shell, inline: "ss -tupln | grep -E \"(kube)|(etcd)\""
     config.vm.provision :shell, inline: "curl -s -L http://localhost:4001/version"
-    config.vm.provision :shell, inline: "curl https://raw.githubusercontent.com/jayunit100/k8hacking/master/guest-smoke/guestbook.sh > /opt/guestbook.sh"
-    config.vm.provision :shell, inline: "cd /opt/ && chmod 777 /opt/guestbook.sh && /opt/guestbook.sh"
+    config.vm.provision :shell, inline: "curl https://raw.githubusercontent.com/jayunit100/k8hacking/master/k8petstore/k8petstore.sh > /opt/k8petstore.sh"
+    config.vm.provision :shell, inline: "cd /opt/ && chmod 777 /opt/k8petstore.sh && /opt/k8petstore.sh"
     # end
 
-  
 end

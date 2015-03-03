@@ -186,7 +186,7 @@ for i in `seq 1 150`;
 do
     ### Just testing that the front end comes up.  Not sure how to test total entries etc... (yet)
     echo "Trying curl ... $i . expect a few failures while pulling images... " 
-    curl "localhost:3000/index.html" > result
+    curl "localhost:3000" > result
     cat result
     cat result | grep -q "Party"
     if [ $? -eq 0 ]; then
