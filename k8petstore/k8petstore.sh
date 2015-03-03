@@ -187,7 +187,7 @@ do
     echo "Trying curl ... $i . expect a few failures while pulling images... " 
     curl "localhost:3000/index.html" > result
     cat result
-    cat result | grep -q "Party Book"
+    cat result | grep -q "Party"
     if [ $? -eq 0 ]; then
         echo "TEST PASSED after $i tries !"
         i=1000
