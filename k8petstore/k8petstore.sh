@@ -6,7 +6,7 @@ cat << EOF > fe-rc.json
   "kind": "ReplicationController",
   "apiVersion": "v1beta1",
   "desiredState": {
-    "replicas": 3,
+    "replicas": 1,
     "replicaSelector": {"name": "frontend"},
     "podTemplate": {
       "desiredState": {
@@ -31,7 +31,70 @@ cat << EOF > fe-rc.json
 }
 EOF
 
-cat << EOF > fe-s.json
+cat << EOF > bps-load-gen-rc.json
+{
+  "id": "bps-load-gen-controller",
+  "kind": "ReplicationController",
+  "apiVersion": "v1beta1",
+  "desiredState": {
+    "replicas": 1,
+    "replicaSelector": {"name": "bps"},
+    "podTemplate": {
+      "desiredState": {
+         "manifest": {
+           "version": "v1beta1",
+           "id": "bps-load-gen-controller",
+           "containers": [{
+             "name": "php-redis",
+             "image": "jayunit100/bigpetstore-load-generator",
+             "cpu": 100,
+             "memory": 50000000,
+             "command": ["sh","-c","/opt/PetStoreLoadGenerator-1.0/bin/PetStoreLoadGenerator htttp://localhost:3000/restapi/rpush/ 4 4 1000 123"] 
+         }]
+         }
+       },
+       "labels": {
+         "name": "bps-label"
+       }
+      }},
+  "labels": {"name": "bps-label"}
+}
+EOF
+
+
+
+cat << EOF > fe-rc.json
+{
+  "id": "frontend-controller",
+  "kind": "ReplicationController",
+  "apiVersion": "v1beta1",
+  "desiredState": {
+    "replicas": 1,
+    "replicaSelector": {"name": "frontend"},
+    "podTemplate": {
+      "desiredState": {
+         "manifest": {
+           "version": "v1beta1",
+           "id": "frontend-controller",
+           "containers": [{
+             "name": "php-redis",
+             "image": "jayunit100/k8petstore",
+             "cpu": 100,
+             "memory": 50000000,
+             "ports": [{"containerPort": 3000, "hostPort": 3000}]
+           }]
+         }
+       },
+       "labels": {
+         "name": "frontend",
+         "uses": "redisslave,redis-master"
+       }
+      }},
+  "labels": {"name": "frontend"}
+}
+EOF
+
+at << EOF > fe-s.json
 {
   "id": "frontend",
   "kind": "Service",
@@ -142,6 +205,10 @@ kubectl create -f slave-rc.json
 kubectl create -f rs-s.json
 kubectl create -f fe-rc.json 
 kubectl create -f fe-s.json 
+echo "Sleeping 30 seconds to give others a head start before starting the load generator"
+sleep 30
+kubectl create -f bps-load-gen-rc.json
+
 
 # wait 60 seconds, this should be sufficient if containers are downloaded on the system.
 echo "Sleeping for 60 seconds, to give cluster time to start the app..."
@@ -150,10 +217,11 @@ i=0
 ### Loop through and keep trying.
 for i in `seq 1 150`;
 do
+    ### Just testing that the front end comes up.  Not sure how to test total entries etc... (yet)
     echo "Trying curl ... $i . expect a few failures while pulling images... " 
-    curl "localhost:3000/index.php?cmd=set&key=messages&value=jayunit100" > result
+    curl "localhost:3000/index.html" > result
     cat result
-    cat result | grep -q "Updated"
+    cat result | grep -q "Party Book"
     if [ $? -eq 0 ]; then
         echo "TEST PASSED after $i tries !"
         i=1000
