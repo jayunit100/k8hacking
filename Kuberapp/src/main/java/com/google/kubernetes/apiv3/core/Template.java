@@ -1,4 +1,4 @@
-package com.google.kubernetes.apiv3;
+package com.google.kubernetes.apiv3.core;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +9,7 @@ import java.util.Map;
 public class Template {
 
     private Metadata metadata;
-    private PodSpec podSpec;
+    private TemplateSpec podSpec;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
@@ -30,12 +30,23 @@ public class Template {
         this.metadata = metadata;
     }
 
+    public Container findContainer(String cname) {
+        if(this.getTmplSpec()==null || this.getTmplSpec().containers.length==0)
+            throw new RuntimeException();
+        for(Container c : this.getTmplSpec().containers){
+            if(c.getName().equals(cname)){
+                return c;
+            }
+        }
+        throw new RuntimeException("Couldnt find container  " + cname + ".  If you're trying to create a service.");
+    }
+
     /**
      *
      * @return
      * The spec
      */
-    public PodSpec getPodSpec() {
+    public TemplateSpec getTmplSpec() {
         return podSpec;
     }
 
@@ -44,7 +55,7 @@ public class Template {
      * @param podSpec
      * The spec
      */
-    public void setPodSpec(PodSpec podSpec) {
+    public void setPodSpec(TemplateSpec podSpec) {
         this.podSpec = podSpec;
     }
 

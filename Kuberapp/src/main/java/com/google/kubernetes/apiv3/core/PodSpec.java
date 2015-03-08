@@ -1,4 +1,4 @@
-package com.google.kubernetes.apiv3;
+package com.google.kubernetes.apiv3.core;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +11,6 @@ public class PodSpec {
     public Integer replicas;
     public Selector selector;
     public Template template;
-    public Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public Integer getReplicas() {
         return replicas;
@@ -37,13 +36,7 @@ public class PodSpec {
         this.template = template;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
 
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
 
 }
 

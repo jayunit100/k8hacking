@@ -1,4 +1,4 @@
-package com.google.kubernetes.apiv3;
+package com.google.kubernetes.apiv3.core;
 
 /**
  * One replication controller

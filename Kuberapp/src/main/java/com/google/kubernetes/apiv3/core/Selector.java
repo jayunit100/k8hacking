@@ -1,6 +1,8 @@
-package com.google.kubernetes.apiv3;
+package com.google.kubernetes.apiv3.core;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -8,8 +10,13 @@ import java.util.Map;
  */
 public class Selector {
 
+    public static final Map<String, Selector> ALL = new HashMap<String, Selector>();
+
+    public Selector(){
+        ALL.put(this.getName(),this);
+    }
+
     public String name;
-    public Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      *
@@ -29,11 +36,5 @@ public class Selector {
         this.name = name;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
 
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
 }
