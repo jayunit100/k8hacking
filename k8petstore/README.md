@@ -31,6 +31,10 @@ If in kube, this is a failure: Missing env variable REDIS_MASTER_SERVICE_HOSTcon
 
 This should launch a container, which runs on port 3000.
 
+## Developing
+
+Launch the app.  In development, the ./ path won't have the html files in it, so copy them in.
+
 ## Questions
 
 For questions about bigpetstore, and how the data is generated, ask on the apache bigtop mailing list.

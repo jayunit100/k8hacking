@@ -33,22 +33,28 @@ func main() {
     var connection = os.Getenv("REDIS_MASTER_SERVICE_HOST")+":"+os.Getenv("REDIS_MASTER_SERVICE_PORT");
 
     if connection == ":" {
-        print("If in kube, this is a failure: Missing env variable REDIS_MASTER_SERVICE_HOST");
-        connection="192.168.59.103:6379";
+        print("WARNING ::: If in kube, this is a failure: Missing env variable REDIS_MASTER_SERVICE_HOST");
+        print("WARNING ::: Attempting to connect redis localhost.")
+        connection="127.0.0.1:6379";
     } else {
+        print("Found redis master host "+ os.Getenv("REDIS_MASTER_SERVICE_PORT"));
         connection = os.Getenv("REDIS_MASTER_SERVICE_HOST") + ":" + os.Getenv("REDIS_MASTER_SERVICE_PORT");
     }
 
-    println("connectin to " + connection)
+    println("Now connecting to : " + connection)
     /**
     *  Create a connection pool.  ?The pool pointer will otherwise
     *  not be of any use.?https://gist.github.com/jayunit100/1d00e6d343056401ef00
     */
     pool = simpleredis.NewConnectionPoolHost(connection)
 
+    println("Connection pool established : " + connection)
+
     defer pool.Close()
 
     r := mux.NewRouter()
+
+    println("Router created ")
 
     /**
     * Define a REST path.
@@ -59,7 +65,10 @@ func main() {
     r.Path("/lrange/{key}").Methods("GET").HandlerFunc(ListRangeHandler)
     r.Path("/rpush/{key}/{value}").Methods("GET").HandlerFunc(ListPushHandler)
     r.Path("/llen").Methods("GET").HandlerFunc(LLENHandler)
-    r.PathPrefix("/").Handler(http.FileServer(http.Dir("./")))
+
+    //for dev environment, the site is one level up...
+    r.PathPrefix("/").Handler(http.FileServer(http.Dir("../../static/")))
+
     r.Path("/env").Methods("GET").HandlerFunc(EnvHandler)
 
     list := simpleredis.NewList(pool, "guestbook")
