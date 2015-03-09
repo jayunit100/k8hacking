@@ -1,6 +1,10 @@
 echo "WRITING KUBE FILES , will overwrite the jsons, then testing pods. is kube clean ready to go?"
 
-PUBLIC_IP="10.1.4.89"
+#PUBLIC_IP="10.1.4.89"
+PUBLIC_IP="192.168.100.200"
+FE="1"
+LG="1"
+SLAVE="0"
 
 cat << EOF > fe-rc.json
 {
@@ -8,7 +12,7 @@ cat << EOF > fe-rc.json
   "kind": "ReplicationController",
   "apiVersion": "v1beta1",
   "desiredState": {
-    "replicas": 30,
+    "replicas": $FE,
     "replicaSelector": {"name": "frontend"},
     "podTemplate": {
       "desiredState": {
@@ -36,7 +40,7 @@ cat << EOF > bps-load-gen-rc.json
   "kind": "ReplicationController",
   "apiVersion": "v1beta1",
   "desiredState": {
-    "replicas": 1,
+    "replicas": $LG,
     "replicaSelector": {"name": "bps"},
     "podTemplate": {
       "desiredState": {
@@ -140,7 +144,7 @@ cat << EOF > slave-rc.json
   "kind": "ReplicationController",
   "apiVersion": "v1beta1",
   "desiredState": {
-    "replicas": 3,
+    "replicas": $SLAVE,
     "replicaSelector": {"name": "redisslave"},
     "podTemplate": {
       "desiredState": {
