@@ -1,4 +1,6 @@
-## Deploying spark and cassandra on kubernetes
+## Deploying spark on kubernetes
+
+*NOTE THAT TO DO THIS, YOU CANT ACTUALLY LEVERAGE KUBE SERVICES, SO THIS IS A HACK, MAKE SURE TO READ THE WHOLE DOC CAREFULLY, THE HACKAROUND FOR RUNNING SPARK ON K8 IS AT THE BOTTOM !*
 
 This repository contains everything for deploying spark on kubernetes.  
 
