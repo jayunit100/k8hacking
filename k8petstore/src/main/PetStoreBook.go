@@ -28,6 +28,26 @@ import (
     "github.com/xyproto/simpleredis"
 )
 
+//return the path to static assets (i.e. index.html)
+func pathToStaticContents() (string) {
+    var static_content = os.Getenv("STATIC_FILES");
+    // Take a wild guess.  This will work in dev environment.
+    if static_content == "" {
+        println("WARNING: DIDNT FIND ENV VAR 'STATIC_FILES', guessing your running in dev.")
+        static_content = "../../static/"
+    } else {
+        println("Read ENV 'STATIC_FILES', path to assets : " + static_content);
+    }
+
+    //Die if no the static files are missing.
+    _, err := os.Stat(static_content)
+    if err != nil {
+        println("os.Stat failed on " + static_content + " This means no static files are available.  Dying...");
+        os.Exit(2);
+    }
+    return static_content;
+}
+
 func main() {
 
     var connection = os.Getenv("REDIS_MASTER_SERVICE_HOST")+":"+os.Getenv("REDIS_MASTER_SERVICE_PORT");
@@ -67,7 +87,8 @@ func main() {
     r.Path("/llen").Methods("GET").HandlerFunc(LLENHandler)
 
     //for dev environment, the site is one level up...
-    r.PathPrefix("/").Handler(http.FileServer(http.Dir("../../static/")))
+
+    r.PathPrefix("/").Handler(http.FileServer(http.Dir( pathToStaticContents() )))
 
     r.Path("/env").Methods("GET").HandlerFunc(EnvHandler)
 
@@ -76,10 +97,11 @@ func main() {
     HandleError(nil, list.Add("tstclaire"))
     HandleError(nil, list.Add("rsquared"))
 
+    println("Now launching negroni...this might take a second...")
     n := negroni.Classic()
     n.UseHandler(r)
     n.Run(":3000")
-    println("done")
+    println("Done ! Web app is now running.")
 
 }
 
