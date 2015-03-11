@@ -9,4 +9,8 @@ echo "kill all pods ???"
 read x
 
 kubectl delete pod --all
+
+## for older kube versions...
+for line in $(kubectl get pods | grep jay | cut -d' ' -f 1);
+
 kubectl get services,pods,rc
