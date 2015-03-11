@@ -33,8 +33,13 @@ This should launch a container, which runs on port 3000.
 
 ## Developing
 
-Launch the app.  In development, the ./ path won't have the html files in it, so copy them in.
-
+Install and run redis locally.
+Install the bigpetstore-transaction-queue generator app locally (optional), but for realistic testing.
+Then, run the go app directly.  You will have to get dependencies using go the first time (will add directions later for that, its easy).
+```
+export STATIC_FILES=./static/
+go run ./src/main/PetStoreBook.go 
+```
 ## Questions
 
 For questions about bigpetstore, and how the data is generated, ask on the apache bigtop mailing list.

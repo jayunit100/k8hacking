@@ -19,7 +19,9 @@ $(document).ready(function() {
       //console.info("data - > " + Math.random())
       //uncommend for debugging...
       //entriesElement.append("<br><br> CURRENT TIME :  "+ $.now() +"<br><br>TOTAL entries :  "+ JSON.stringify(currentEntries)+"<br><br>")
-      entriesElement.append("<br><br> CURRENT TIME :  "+ $.now() +"<br><br>TOTAL entries :  "+ currentEntries[currentEntries.length-1]+"<br><br>")
+      var c1 = currentEntries[currentEntries.length-1]
+      var c2 = currentEntries[currentEntries.length-2]
+      entriesElement.append("<br><br> CURRENT TIME :  "+ $.now() +"<br><br>TOTAL entries :  "+ c1 +"<BR>transaction delta " + (c1-c2) +"<br><br>")
       f(currentEntries);
     $.each(data, function(key, val) {
         //console.info(key + " -> " +val);

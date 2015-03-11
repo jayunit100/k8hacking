@@ -50,15 +50,15 @@ func pathToStaticContents() (string) {
 
 func main() {
 
-    var connection = os.Getenv("REDIS_MASTER_SERVICE_HOST")+":"+os.Getenv("REDIS_MASTER_SERVICE_PORT");
+    var connection = os.Getenv("REDISMASTER_SERVICE_HOST")+":"+os.Getenv("REDISMASTER_SERVICE_PORT");    
 
     if connection == ":" {
-        print("WARNING ::: If in kube, this is a failure: Missing env variable REDIS_MASTER_SERVICE_HOST");
+        print("WARNING ::: If in kube, this is a failure: Missing env variable REDISMASTER_SERVICE_HOST");
         print("WARNING ::: Attempting to connect redis localhost.")
         connection="127.0.0.1:6379";
     } else {
-        print("Found redis master host "+ os.Getenv("REDIS_MASTER_SERVICE_PORT"));
-        connection = os.Getenv("REDIS_MASTER_SERVICE_HOST") + ":" + os.Getenv("REDIS_MASTER_SERVICE_PORT");
+        print("Found redis master host "+ os.Getenv("REDISMASTER_SERVICE_PORT"));
+        connection = os.Getenv("REDISMASTER_SERVICE_HOST") + ":" + os.Getenv("REDISMASTER_SERVICE_PORT");
     }
 
     println("Now connecting to : " + connection)
