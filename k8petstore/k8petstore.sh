@@ -1,11 +1,12 @@
 echo "WRITING KUBE FILES , will overwrite the jsons, then testing pods. is kube clean ready to go?"
 
-PUBLIC_IP="10.1.4.89"
+PUBLIC_IP="0.0.0.0"
 PUBLIC_IP2="10.1.4.87"
+#PUBLIC_IP3="127.0.0.1"
 #PUBLIC_IP="192.168.100.200"
-FE="5"
-LG="5"
-SLAVE="5"
+FE="1"
+LG="1"
+SLAVE="1"
 
 cat << EOF > fe-rc.json
 {
