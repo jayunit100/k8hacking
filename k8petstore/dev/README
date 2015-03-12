@@ -1,0 +1,8 @@
+This folder can be used by anyone interested in building and developing the k8petstore application.
+
+This is for dev and test.
+
+`vagrant up` gets you a cluster with the app's core components running.
+
+You can rename Vagrantfile_atomic to Vagrantfile if you want to try to test in atomic instead.
+
