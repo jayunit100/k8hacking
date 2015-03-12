@@ -3,7 +3,8 @@ FROM google/golang:latest
 # Add source to gopath.  This is defacto required for go apps.
 ADD ./src /gopath/src/
 ADD ./static /tmp/static
-
+ADD ./test.sh /opt/test.sh
+RUN chmod 777 /opt/test.sh
 # $GOPATH/[src/a/b/c]
 # go build a/b/c
 # go run main
