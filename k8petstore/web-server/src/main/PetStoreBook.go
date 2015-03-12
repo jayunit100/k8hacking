@@ -92,7 +92,7 @@ func main() {
 
     r.Path("/env").Methods("GET").HandlerFunc(EnvHandler)
 
-    list := simpleredis.NewList(pool, "guestbook")
+    list := simpleredis.NewList(pool, "k8petstore")
     HandleError(nil, list.Add("jayunit100"))
     HandleError(nil, list.Add("tstclaire"))
     HandleError(nil, list.Add("rsquared"))
@@ -138,7 +138,7 @@ func ListRangeHandler(rw http.ResponseWriter, req *http.Request) {
 func LLENHandler(rw http.ResponseWriter, req *http.Request) {
     println("LLEN HANDLER")
 
-    infoL := HandleError(pool.Get(0).Do("LLEN","guestbook")).(int64)
+    infoL := HandleError(pool.Get(0).Do("LLEN","k8petstore")).(int64)
     lengthJSON := HandleError(json.MarshalIndent(infoL, "", "  ")).([]byte)
 
     print("RETURN LEN = "+string(lengthJSON))

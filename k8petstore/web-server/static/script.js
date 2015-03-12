@@ -3,8 +3,8 @@ $(document).ready(function() {
   var max_trials=1000
 
   var headerTitleElement = $("#header h1");
-  var entriesElement = $("#guestbook-entries");
-  var hostAddressElement = $("#guestbook-host-address");
+  var entriesElement = $("#k8petstore-entries");
+  var hostAddressElement = $("#k8petstore-host-address");
   var currentEntries = []
 
   var updateEntryCount = function(data, trial) {
@@ -46,7 +46,7 @@ $(document).ready(function() {
   (function fetchGuestbook() {
 
       // Get JSON by running the query, and append
-    $.getJSON("lrange/guestbook").done(updateEntries).always(
+    $.getJSON("lrange/k8petstore").done(updateEntries).always(
       function() {
         setTimeout(fetchGuestbook, 2000);
       });

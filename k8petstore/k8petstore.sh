@@ -1,4 +1,4 @@
-MAKE SURE YOU HAVE A FILE rhnpassword which has your rhn password in it on the first line!
+AKE SURE YOU HAVE A FILE rhnpassword which has your rhn password in it on the first line!
 Fratyobavcue1-
 echo "WRITING KUBE FILES , will overwrite the jsons, then testing pods. is kube clean ready to go?"
 
@@ -54,7 +54,7 @@ cat << EOF > bps-load-gen-rc.json
            "containers": [{
              "name": "bps",
              "image": "jayunit100/bigpetstore-load-generator",
-             "command": ["sh","-c","/opt/PetStoreLoadGenerator-1.0/bin/PetStoreLoadGenerator http://\$FRONTEND_SERVICE_HOST:3000/rpush/guestbook/ 4 4 1000 123"]
+             "command": ["sh","-c","/opt/PetStoreLoadGenerator-1.0/bin/PetStoreLoadGenerator http://\$FRONTEND_SERVICE_HOST:3000/rpush/k8petstore/ 4 4 1000 123"]
          }]
          }
        },
@@ -95,7 +95,7 @@ cat << EOF > rm.json
       "id": "redismaster",
       "containers": [{
         "name": "master",
-        "image": "jayunit100/guestbook-redis-master",
+        "image": "jayunit100/k8petstore-redis-master",
         "ports": [{
           "containerPort": 6379,
           "hostPort": 6379
@@ -156,7 +156,7 @@ cat << EOF > slave-rc.json
            "id": "redissc",
            "containers": [{
              "name": "slave",
-             "image": "jayunit100/guestbook-redis-slave",
+             "image": "jayunit100/k8petstore-redis-slave",
              "ports": [{"containerPort": 6379, "hostPort": 6380}]
            }]
          }
