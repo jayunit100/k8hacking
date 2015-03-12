@@ -1,12 +1,10 @@
 echo "WRITING KUBE FILES , will overwrite the jsons, then testing pods. is kube clean ready to go?"
 
-PUBLIC_IP="0.0.0.0"
-PUBLIC_IP2="10.1.4.87"
-#PUBLIC_IP3="127.0.0.1"
-#PUBLIC_IP="192.168.100.200"
-FE="1"
-LG="1"
-SLAVE="1"
+PUBLIC_IP="127.0.0.1" # ip which we use to access the Web server.
+SECONDS=1000          # number of seconds to measure throughput.
+FE="1"                # amount of Web server  
+LG="1"                # amount of load generators
+SLAVE="1"             # amount of redis slaves 
 
 cat << EOF > fe-rc.json
 {
@@ -180,11 +178,7 @@ kubectl create -f bps-load-gen-rc.json --api-version=v1beta1
 
 i=0
 
-### New test.
-python test.py
-
-### Original test.
-### Loop through and keep trying.
+### Test HTTP Server comes up.
 for i in `seq 1 150`;
 do
     ### Just testing that the front end comes up.  Not sure how to test total entries etc... (yet)
@@ -200,6 +194,15 @@ do
     echo "the above RESULT didn't contain target string for trial $i"
     sleep 5
 done
-cat result
 echo " After several [ $i ] tries, TEST FAILED !!!!!!!"
 exit 1
+
+### Print statistics of db size, every second, until $SECONDS are up.
+for i in `seq 1 $SECONDS`;
+do
+    echo "$i"
+    curl "$PUBLIC_IP:3000/llen"
+    sleep 1
+done
+
+
