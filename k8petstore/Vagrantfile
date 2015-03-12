@@ -1,52 +1,35 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
-VAGRANTFILE_API_VERSION = "2"
+require 'fileutils'
 
-puts "MAKE SURE YOU HAVE A FILE rhnpassword which has your rhn password in it on the first line!"
-def rhnPassword()
-    newFile = File.open("rhnpassword")
-    newFile.read
-end
+#$fes = 1
+#$rslavess = 1 
 
-Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
- 
-  RHN = "rhn-support-jvyas"
-  PWD = rhnPassword()
-  puts PWD
-  config.vm.synced_folder ".", "/vagrant", disabled: true
-  #shared folders not working w/ atomic currently.
-  #config.vm.synced_folder "./", "/tmp/shared"
+Vagrant.configure("2") do |config|
 
-  # All Vagrant configuration is done here. The most common configuration
-  # options are documented and commented below. For a complete reference,
-  # please see the online documentation at vagrantup.com.
+    config.vm.define "rmaster" do |rm|     
+        rm.vm.provider "docker" do |d|
+            d.build_dir = "redis-master/"
+            d.name = "rmaster"
+            d.create_args = ["--privileged=true", "-m", "1g"]
+            #d.ports = [ "6379:6379" ]
+            d.remains_running = true
+        end
+    end
 
-  # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "atomic" 
-  config.vm.box_url = "http://download.eng.bos.redhat.com/rel-eng/Atomic/7/trees/GA.brew/images//20150129.0/cloud/rhel-atomic-host-cloud-vagrant-virtualbox.box"
-  
-  config.vm.provider "virtualbox" do |vb|
-    vb.customize ["modifyvm", :id, "--memory", "6200"]
-  end
+    config.vm.define "frontend" do |fe|
+        fe.vm.provider "docker" do |d|
+            d.build_dir = "web-server"
+            d.name = "web-server"
+            d.create_args = ["--privileged=true"]
+            d.remains_running = true
+            d.create_args = d.create_args << "--link" << "rmaster:rmaster"
+            d.ports = ["3000:3000"]
+            d.env = {"REDISMASTER_SERVICE_HOST"=>"rmaster","REDISMASTER_SERVICE_PORT"=>"6379"} 
+       end
+    end
+    ### Todo , add data generator.
 
-  ### Forward Guestbook port to localhost. 
-  config.vm.network "forwarded_port", guest: 3000, host: 3000
-
-  #Vagrant.configure("2") do |config|
-   
-    config.vm.provision :shell, inline: "subscription-manager register --auto-attach --username=#{RHN} --password=#{PWD}"  
-    #### SETENFORCE 0 :  Necessary for REDIS to write properly to disk ? 
-    config.vm.provision :shell, inline: "setenforce 0" 
-  
-    config.vm.provision :shell, inline: "for SERVICES in etcd kube-apiserver kube-controller-manager kube-scheduler ; do  sudo systemctl restart $SERVICES; sudo systemctl enable $SERVICES; done"
-    config.vm.provision :shell, inline: "for SERVICES in docker kube-proxy.service kubelet.service; do systemctl restart $SERVICES; systemctl enable $SERVICES; systemctl status $SERVICES; done"
-    config.vm.provision :shell, inline: "ss -tupln | grep -E \"(kube)|(etcd)\""
-    config.vm.provision :shell, inline: "curl -s -L http://localhost:4001/version"
-    config.vm.provision :shell, inline: "curl https://raw.githubusercontent.com/jayunit100/k8hacking/master/k8petstore/k8petstore.sh > /opt/k8petstore.sh"
-    config.vm.provision :shell, inline: "curl https://raw.githubusercontent.com/jayunit100/k8hacking/master/k8petstore/kill.sh > /opt/kill.sh"
-    config.vm.provision :shell, inline: "cd /opt/ && chmod 777 /opt/* && /opt/k8petstore.sh"
-    # end
 
 end
