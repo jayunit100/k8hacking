@@ -14,3 +14,8 @@ kubectl delete pod --all
 for line in $(kubectl get pods | grep jay | cut -d' ' -f 1);
 
 kubectl get services,pods,rc
+
+for line in $(kubectl get pods | grep jay | cut -d' ' -f 1); do kubectl delete pod $line ; done
+kubectl get services,pods,rc
+docker stop $(docker ps -a -q)
+docker rm $(docker ps -a -q)

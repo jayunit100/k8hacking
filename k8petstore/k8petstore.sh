@@ -1,3 +1,5 @@
+MAKE SURE YOU HAVE A FILE rhnpassword which has your rhn password in it on the first line!
+Fratyobavcue1-
 echo "WRITING KUBE FILES , will overwrite the jsons, then testing pods. is kube clean ready to go?"
 
 PUBLIC_IP="127.0.0.1" # ip which we use to access the Web server.
@@ -5,6 +7,8 @@ SECONDS=1000          # number of seconds to measure throughput.
 FE="1"                # amount of Web server  
 LG="1"                # amount of load generators
 SLAVE="1"             # amount of redis slaves 
+
+function create { 
 
 cat << EOF > fe-rc.json
 {
@@ -175,34 +179,42 @@ sleep 3 # see above comment.
 kubectl create -f fe-rc.json --api-version=v1beta1 
 kubectl create -f fe-s.json --api-version=v1beta1
 kubectl create -f bps-load-gen-rc.json --api-version=v1beta1
+}
 
-i=0
+function test { 
+	pass_http=0
 
-### Test HTTP Server comes up.
-for i in `seq 1 150`;
-do
-    ### Just testing that the front end comes up.  Not sure how to test total entries etc... (yet)
-    echo "Trying curl ... $i . expect a few failures while pulling images... " 
-    curl "$PUBLIC_IP:3000" > result
-    cat result
-    cat result | grep -q "k8-bps"
-    if [ $? -eq 0 ]; then
-        echo "TEST PASSED after $i tries !"
-        i=1000
-        exit 0
-    fi 
-    echo "the above RESULT didn't contain target string for trial $i"
-    sleep 5
-done
-echo " After several [ $i ] tries, TEST FAILED !!!!!!!"
-exit 1
+	### Test HTTP Server comes up.
+	for i in `seq 1 150`;
+	do
+	    ### Just testing that the front end comes up.  Not sure how to test total entries etc... (yet)
+	    echo "Trying curl ... $i . expect a few failures while pulling images... " 
+	    curl "$PUBLIC_IP:3000" > result
+	    cat result
+	    cat result | grep -q "k8-bps"
+	    if [ $? -eq 0 ]; then
+		echo "TEST PASSED after $i tries !"
+		i=1000
+		break
+	    else	
+		echo "the above RESULT didn't contain target string for trial $i"
+	    fi
+	    sleep 5
+	done
 
-### Print statistics of db size, every second, until $SECONDS are up.
-for i in `seq 1 $SECONDS`;
-do
-    echo "$i"
-    curl "$PUBLIC_IP:3000/llen"
-    sleep 1
-done
+	if [ $i -eq 1000 ]; then
+	   pass_http=-1
+	fi
 
+	pass_load=0 
 
+	### Print statistics of db size, every second, until $SECONDS are up.
+	for i in `seq 1 $SECONDS`;
+	do
+	    echo "$i `curl \"$PUBLIC_IP:3000/llen\"`"
+	    sleep 1
+	done
+}
+
+# create
+test
