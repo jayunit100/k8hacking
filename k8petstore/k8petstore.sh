@@ -1,5 +1,3 @@
-AKE SURE YOU HAVE A FILE rhnpassword which has your rhn password in it on the first line!
-Fratyobavcue1-
 echo "WRITING KUBE FILES , will overwrite the jsons, then testing pods. is kube clean ready to go?"
 
 PUBLIC_IP="127.0.0.1" # ip which we use to access the Web server.
@@ -211,10 +209,12 @@ function test {
 	### Print statistics of db size, every second, until $SECONDS are up.
 	for i in `seq 1 $SECONDS`;
 	do
-	    echo "$i `curl \"$PUBLIC_IP:3000/llen\"`"
+	    echo "curl : $i"
+            curl "$PUBLIC_IP:3000/llen" >> result
 	    sleep 1
 	done
 }
 
-# create
+create
+
 test

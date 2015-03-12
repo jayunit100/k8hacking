@@ -45,8 +45,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provision :shell, inline: "ss -tupln | grep -E \"(kube)|(etcd)\""
     config.vm.provision :shell, inline: "curl -s -L http://localhost:4001/version"
     config.vm.provision :shell, inline: "curl https://raw.githubusercontent.com/jayunit100/k8hacking/master/k8petstore/k8petstore.sh > /opt/k8petstore.sh"
-    config.vm.provision :shell, inline: "curl https://raw.githubusercontent.com/jayunit100/k8hacking/master/k8petstore/k8petstore.sh > /opt/kill.sh"
-    config.vm.provision :shell, inline: "cd /opt/ && chmod 777 /opt/k8petstore.sh && /opt/k8petstore.sh"
+    config.vm.provision :shell, inline: "curl https://raw.githubusercontent.com/jayunit100/k8hacking/master/k8petstore/kill.sh > /opt/kill.sh"
+    config.vm.provision :shell, inline: "cd /opt/ && chmod 777 /opt/* && /opt/k8petstore.sh"
     # end
 
 end
