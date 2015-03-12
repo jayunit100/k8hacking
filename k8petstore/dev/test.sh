@@ -3,8 +3,9 @@
 set -x 
 
 cd hosts/ 
-ls
-#vagrant up
+echo "note: the VM must be running before you try this"
+echo "if not already running, cd to hosts and run vagrant up"
+vagrant provision
 #echo "removing containers"
 #vagrant ssh -c "sudo docker rm -f $(docker ps -a -q)"
 cd ..
@@ -12,13 +13,13 @@ cd ..
 ## Now spin up the docker containers
 ## these will run in the ^ host vm above.
 
-vagrant destroy --force && vagrant up
+vagrant up
 
 ## Finally, curl the length, it should be 3 .
 
 x=`curl localhost:3000/llen`
 
-if [ x$x -eq "x3" ]; then 
+if [ x$x == "x3" ]; then 
     echo " passed $3 "
     exit 0
 else

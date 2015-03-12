@@ -139,6 +139,8 @@ func LLENHandler(rw http.ResponseWriter, req *http.Request) {
     println("LLEN HANDLER")
 
     infoL := HandleError(pool.Get(0).Do("LLEN","k8petstore")).(int64)
+    print("LLEN ...............")
+    print(infoL)
     lengthJSON := HandleError(json.MarshalIndent(infoL, "", "  ")).([]byte)
 
     print("RETURN LEN = "+string(lengthJSON))

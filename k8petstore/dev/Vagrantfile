@@ -19,7 +19,9 @@ Vagrant.configure("2") do |config|
         end
     end
    
-    
+   puts "sleep 20 to make sure container is up..."
+   sleep(20)    
+   puts "resume"
 
     config.vm.define "frontend" do |fe|
         fe.vm.provider "docker" do |d|
