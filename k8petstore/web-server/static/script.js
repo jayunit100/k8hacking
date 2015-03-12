@@ -25,7 +25,7 @@ $(document).ready(function() {
       f(currentEntries);
     $.each(data, function(key, val) {
         //console.info(key + " -> " +val);
-        entriesElement.append("<p>" + key + " " + val.substr(100,200) + "</p>");
+        entriesElement.append("<p>" + key + " " + val.substr(0,50) + val.substr(100,150) + "</p>");
     });
 
   }
