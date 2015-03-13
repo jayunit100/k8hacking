@@ -24,7 +24,7 @@ cat << EOF > fe-rc.json
            "id": "frontendCcontroller",
            "containers": [{
              "name": "frontend-go-restapi",
-             "image": "jayunit100/k8petstore:$VERSION",
+             "image": "jayunit100/k8-petstore-web-server:$VERSION",
            }]
          }
        },
@@ -94,7 +94,7 @@ cat << EOF > rm.json
       "id": "redismaster",
       "containers": [{
         "name": "master",
-        "image": "jayunit100/redis-master:$VERSION",
+        "image": "jayunit100/k8-petstore-redis-master:$VERSION",
         "ports": [{
           "containerPort": 6379,
           "hostPort": 6379
@@ -155,7 +155,7 @@ cat << EOF > slave-rc.json
            "id": "redissc",
            "containers": [{
              "name": "slave",
-             "image": "jayunit100/redis-slave:$VERSION",
+             "image": "jayunit100/k8-petstore-redis-slave:$VERSION",
              "ports": [{"containerPort": 6379, "hostPort": 6380}]
            }]
          }
