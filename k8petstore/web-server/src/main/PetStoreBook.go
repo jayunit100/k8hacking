@@ -22,7 +22,7 @@ import (
     "net/http"
     "os"
     "strings"
-
+    "fmt"
     "github.com/codegangsta/negroni"
     "github.com/gorilla/mux"
     "github.com/xyproto/simpleredis"
@@ -33,16 +33,16 @@ func pathToStaticContents() (string) {
     var static_content = os.Getenv("STATIC_FILES");
     // Take a wild guess.  This will work in dev environment.
     if static_content == "" {
-        println("WARNING: DIDNT FIND ENV VAR 'STATIC_FILES', guessing your running in dev.")
+        println("*********** WARNING: DIDNT FIND ENV VAR 'STATIC_FILES', guessing your running in dev.")
         static_content = "../../static/"
     } else {
-        println("Read ENV 'STATIC_FILES', path to assets : " + static_content);
+        println("=========== Read ENV 'STATIC_FILES', path to assets : " + static_content);
     }
 
     //Die if no the static files are missing.
     _, err := os.Stat(static_content)
     if err != nil {
-        println("os.Stat failed on " + static_content + " This means no static files are available.  Dying...");
+        println("*********** os.Stat failed on " + static_content + " This means no static files are available.  Dying...");
         os.Exit(2);
     }
     return static_content;
@@ -97,12 +97,24 @@ func main() {
     HandleError(nil, list.Add("tstclaire"))
     HandleError(nil, list.Add("rsquared"))
 
-    println("Now launching negroni...this might take a second...")
+    // Verify that this is 3 on startup.
+    infoL := HandleError(pool.Get(0).Do("LLEN","k8petstore")).(int64) 
+    fmt.Printf("\n=========== Starting DB has %d elements \n", infoL)
+    if infoL < 3 {
+        print("Not enough entries in DB.  something is wrong w/ redis querying")
+        print(infoL)
+        panic("Failed ... ")
+    }  
+
+
+    println("===========  Now launching negroni...this might take a second...")
     n := negroni.Classic()
     n.UseHandler(r)
     n.Run(":3000")
     println("Done ! Web app is now running.")
 
+   
+   
 }
 
 /**
@@ -136,13 +148,13 @@ func ListRangeHandler(rw http.ResponseWriter, req *http.Request) {
 }
 
 func LLENHandler(rw http.ResponseWriter, req *http.Request) {
-    println("LLEN HANDLER")
+    println("=========== LLEN HANDLER")
 
     infoL := HandleError(pool.Get(0).Do("LLEN","k8petstore")).(int64)
-    print("LLEN ...............")
-    print(infoL)
+    fmt.Printf("=========== LLEN is %d ", infoL)
     lengthJSON := HandleError(json.MarshalIndent(infoL, "", "  ")).([]byte)
-
+    fmt.Printf("================ LLEN json is %s", infoL)
+    
     print("RETURN LEN = "+string(lengthJSON))
     rw.Write(lengthJSON)
 
