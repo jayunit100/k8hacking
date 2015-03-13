@@ -1,5 +1,6 @@
 echo "WRITING KUBE FILES , will overwrite the jsons, then testing pods. is kube clean ready to go?"
 
+VERSION="r.2.8.19"
 PUBLIC_IP="127.0.0.1" # ip which we use to access the Web server.
 SECONDS=1000          # number of seconds to measure throughput.
 FE="1"                # amount of Web server  
@@ -23,7 +24,7 @@ cat << EOF > fe-rc.json
            "id": "frontendCcontroller",
            "containers": [{
              "name": "frontend-go-restapi",
-             "image": "jayunit100/k8petstore",
+             "image": "jayunit100/k8petstore:$VERSION",
            }]
          }
        },
@@ -93,7 +94,7 @@ cat << EOF > rm.json
       "id": "redismaster",
       "containers": [{
         "name": "master",
-        "image": "jayunit100/redis-master:2.8.19",
+        "image": "jayunit100/redis-master:$VERSION",
         "ports": [{
           "containerPort": 6379,
           "hostPort": 6379
@@ -154,7 +155,7 @@ cat << EOF > slave-rc.json
            "id": "redissc",
            "containers": [{
              "name": "slave",
-             "image": "jayunit100/redis-slave:2.8.19",
+             "image": "jayunit100/redis-slave:$VERSION",
              "ports": [{"containerPort": 6379, "hostPort": 6380}]
            }]
          }
