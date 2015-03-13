@@ -19,10 +19,13 @@ vagrant up
 
 x=`curl localhost:3000/llen`
 
-if [ x$x == "x3" ]; then 
-    echo " passed $3 "
-    exit 0
-else
-    echo " FAIL" 
-    exit 1
-fi
+for i in `seq 1 100` do
+    if [ x$x == "x3" ]; then 
+       echo " passed $3 "
+       exit 0
+    else
+       echo " FAIL" 
+    fi
+done
+
+exit 1 # if we get here the test obviously failed.

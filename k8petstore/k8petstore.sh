@@ -93,7 +93,7 @@ cat << EOF > rm.json
       "id": "redismaster",
       "containers": [{
         "name": "master",
-        "image": "jayunit100/k8petstore-redis-master",
+        "image": "jayunit100/redis-master:2.8.19",
         "ports": [{
           "containerPort": 6379,
           "hostPort": 6379
@@ -154,7 +154,7 @@ cat << EOF > slave-rc.json
            "id": "redissc",
            "containers": [{
              "name": "slave",
-             "image": "jayunit100/k8petstore-redis-slave",
+             "image": "jayunit100/redis-slave:2.8.19",
              "ports": [{"containerPort": 6379, "hostPort": 6380}]
            }]
          }
