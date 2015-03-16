@@ -1,5 +1,19 @@
 ## Welcome to k8PetStore
 
+
+
+
+
+## WE'VE MOVED TO Kubernetes ! https://github.com/GoogleCloudPlatform/kubernetes/tree/master/examples/k8petstore
+
+See you there.
+
+
+
+## Old instructions ... please don't use them, as this repo is now being maintained inside kubernetes, and I plan to delete this at some point
+
+
+
 This is a follow up to the Guestbook example, which implements a slightly more real world demonstration using 
 
 the same application architecture.
