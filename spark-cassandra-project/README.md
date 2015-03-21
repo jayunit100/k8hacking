@@ -1,3 +1,5 @@
+# This is now obsolete, see mattf's spark contribution to GoogleCloudPlatform/kubernetes/ where the LOCAL_IP environment variable is passed to spark slaves on startup.  This solves the problem of not being able to run spark kube services for the master.
+
 ## Deploying spark on kubernetes
 
 *NOTE THAT TO DO THIS, YOU CANT ACTUALLY LEVERAGE KUBE SERVICES, SO THIS IS A HACK, MAKE SURE TO READ THE WHOLE DOC CAREFULLY, THE HACKAROUND FOR RUNNING SPARK ON K8 IS AT THE BOTTOM !*
